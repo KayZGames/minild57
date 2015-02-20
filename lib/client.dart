@@ -2,6 +2,8 @@ library client;
 
 import 'dart:html' hide Player, Timeline;
 export 'dart:html' hide Player, Timeline;
+import 'dart:web_gl';
+import 'dart:typed_data';
 
 import 'package:minild57/shared.dart';
 
@@ -17,15 +19,19 @@ class Game extends GameBase {
   Game() : super.noAssets('minild57', 'canvas', 800, 600, webgl: true);
 
   void createEntities() {
-    // addEntity([Component1, Component2]);
+     addEntity([new Position(0.0, 0.0)]);
   }
 
   List<EntitySystem> getSystems() {
     return [
             new TweeningSystem(),
+
             new WebGlCanvasCleaningSystem(ctx),
+            new SpriteRenderingSystem(ctx),
+
 //            new FpsRenderingSystem(ctx),
             new AnalyticsSystem(AnalyticsSystem.GITHUB, 'minild57')
     ];
   }
 }
+
