@@ -17,9 +17,18 @@ class Acceleration extends Component {
 }
 
 class Renderable extends Component {
-  String name;
+  String _name;
+  int frame;
+  int maxFrames;
   bool facesRight;
-  Renderable(this.name, [this.facesRight = true]);
+  Renderable(this._name, [this.frame = 0, this.maxFrames = 1, this.facesRight = true]);
+
+  String get name => '${_name}_${frame}';
 }
 
 class Controller extends Component {}
+
+class Ai extends Component {
+  double xMin, xMax, acc;
+  Ai(this.xMin, this.xMax, this.acc);
+}

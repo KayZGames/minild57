@@ -74,3 +74,44 @@ class DirectionSystem extends EntityProcessingSystem {
     }
   }
 }
+
+class AnimationSystem extends EntityProcessingSystem {
+  Mapper<Renderable> rm;
+
+  AnimationSystem() : super(Aspect.getAspectForAllOf([Renderable]));
+
+  @override
+  void processEntity(Entity entity) {
+    var r = rm[entity];
+
+    r.frame = (5 * world.time % r.maxFrames).toInt();
+  }
+}
+
+class AiSystem extends EntityProcessingSystem {
+  Mapper<Acceleration> am;
+  Mapper<Velocity> vm;
+  Mapper<Position> pm;
+  Mapper<Ai> aim;
+
+  AiSystem() : super(Aspect.getAspectForAllOf([Ai, Acceleration, Velocity, Position]));
+
+
+  @override
+  void processEntity(Entity entity) {
+    var a = am[entity];
+    var v = vm[entity];
+    var p = pm[entity];
+    var ai = aim[entity];
+
+    if (p.x > ai.xMax) {
+      a.x = -ai.acc;
+    } else if (p.x < ai.xMin) {
+      a.x = ai.acc;
+    } else if (v.x == 0.0) {
+      a.x = ai.acc;
+    } else {
+      a.x = ai.acc * FastMath.signum(v.x);
+    }
+  }
+}
