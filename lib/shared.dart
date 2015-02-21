@@ -8,3 +8,5 @@ part 'src/shared/components.dart';
 part 'src/shared/systems/logic.dart';
 
 const int PIXEL_PER_METER = 64;
+
+const String playerTag = 'player';

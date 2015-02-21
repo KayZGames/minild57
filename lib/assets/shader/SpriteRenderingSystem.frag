@@ -5,5 +5,7 @@ uniform vec2 uSize;
 varying vec2 vTexCoord;
 
 void main() {
-  gl_FragColor = texture2D(uSheet, vTexCoord / uSize);
+	vec4 color = texture2D(uSheet, vTexCoord / uSize);;
+	if (color.a < 1.0) discard;
+	gl_FragColor = color;
 }

@@ -19,7 +19,14 @@ class Game extends GameBase {
   Game() : super('minild57', 'canvas', 800, 600, webgl: true, bodyDefsName: null);
 
   void createEntities() {
-     addEntity([new Controller(), new Position(400.0, 0.0), new Acceleration(), new Velocity(), new Renderable('player')]);
+    TagManager tm = world.getManager(TagManager);
+    var player = addEntity([new Controller(), new Position(400.0, 0.0), new Acceleration(), new Velocity(), new Renderable('player')]);
+    tm.register(player, playerTag);
+
+    addEntity([new Position(100.0, 0.0), new Acceleration(), new Velocity(), new Renderable('player', false)]);
+    addEntity([new Position(200.0, 0.0), new Acceleration(), new Velocity(), new Renderable('player', false)]);
+    addEntity([new Position(500.0, 0.0), new Acceleration(), new Velocity(), new Renderable('player')]);
+    addEntity([new Position(600.0, 0.0), new Acceleration(), new Velocity(), new Renderable('player')]);
   }
 
   List<EntitySystem> getSystems() {
@@ -39,6 +46,10 @@ class Game extends GameBase {
 //            new FpsRenderingSystem(ctx),
             new AnalyticsSystem(AnalyticsSystem.GITHUB, 'minild57')
     ];
+  }
+
+  onInit() {
+    world.addManager(new TagManager());
   }
 }
 
