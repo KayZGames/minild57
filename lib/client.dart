@@ -27,6 +27,9 @@ class Game extends GameBase {
     addEntity([new Position(200.0, 0.0), new Acceleration(), new Velocity(), new Renderable('player', false)]);
     addEntity([new Position(500.0, 0.0), new Acceleration(), new Velocity(), new Renderable('player')]);
     addEntity([new Position(600.0, 0.0), new Acceleration(), new Velocity(), new Renderable('player')]);
+    for (int i = 0; i < 800; i += 64) {
+      addEntity([new Position(i.toDouble(), -64.0), new Renderable('ground_0', random.nextBool())]);
+    }
   }
 
   List<EntitySystem> getSystems() {

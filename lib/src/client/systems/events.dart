@@ -19,10 +19,10 @@ class InputHandlingSystem extends GenericInputHandlingSystem {
         v.y = 6.0 * PIXEL_PER_METER;
       }
       if (keyState[KeyCode.A] == true) {
-        a.x = 50.0 * PIXEL_PER_METER;
+        a.x = 20.0 * PIXEL_PER_METER;
       }
       if (keyState[KeyCode.D] == true) {
-        a.x = -50.0 * PIXEL_PER_METER;
+        a.x = -20.0 * PIXEL_PER_METER;
       }
     }
   }
