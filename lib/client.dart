@@ -16,10 +16,10 @@ part 'src/client/systems/rendering.dart';
 
 class Game extends GameBase {
 
-  Game() : super.noAssets('minild57', 'canvas', 800, 600, webgl: true);
+  Game() : super('minild57', 'canvas', 800, 600, webgl: true, bodyDefsName: null);
 
   void createEntities() {
-     addEntity([new Position(0.0, 0.0)]);
+     addEntity([new Position(400.0, 0.0), new Renderable('player')]);
   }
 
   List<EntitySystem> getSystems() {
@@ -27,7 +27,7 @@ class Game extends GameBase {
             new TweeningSystem(),
 
             new WebGlCanvasCleaningSystem(ctx),
-            new SpriteRenderingSystem(ctx),
+            new SpriteRenderingSystem(ctx, spriteSheet),
 
 //            new FpsRenderingSystem(ctx),
             new AnalyticsSystem(AnalyticsSystem.GITHUB, 'minild57')
