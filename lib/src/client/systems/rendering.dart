@@ -52,14 +52,25 @@ class SpriteRenderingSystem extends WebGlRenderingSystem {
     positions[index * 8 + 6] = p.x + dst.width / 2;
     positions[index * 8 + 7] = p.y + dst.height;
 
-    texCoords[index * 8] = src.left.toDouble();
-    texCoords[index * 8 + 1] = src.bottom.toDouble();
-    texCoords[index * 8 + 2] = src.right.toDouble();
-    texCoords[index * 8 + 3] = src.bottom.toDouble();
-    texCoords[index * 8 + 4] = src.left.toDouble();
-    texCoords[index * 8 + 5] = src.top.toDouble();
-    texCoords[index * 8 + 6] = src.right.toDouble();
-    texCoords[index * 8 + 7] = src.top.toDouble();
+    var right;
+    var left;
+    if (r.facesRight) {
+      left = src.left.toDouble();
+      right = src.right.toDouble();
+    } else {
+      right = src.left.toDouble();
+      left = src.right.toDouble();
+    }
+    var bottom = src.bottom.toDouble();
+    var top = src.top.toDouble();
+    texCoords[index * 8] = left;
+    texCoords[index * 8 + 1] = bottom;
+    texCoords[index * 8 + 2] = right;
+    texCoords[index * 8 + 3] = bottom;
+    texCoords[index * 8 + 4] = left;
+    texCoords[index * 8 + 5] = top;
+    texCoords[index * 8 + 6] = right;
+    texCoords[index * 8 + 7] = top;
   }
 
   @override

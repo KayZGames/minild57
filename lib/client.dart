@@ -19,12 +19,19 @@ class Game extends GameBase {
   Game() : super('minild57', 'canvas', 800, 600, webgl: true, bodyDefsName: null);
 
   void createEntities() {
-     addEntity([new Position(400.0, 0.0), new Renderable('player')]);
+     addEntity([new Controller(), new Position(400.0, 0.0), new Acceleration(), new Velocity(), new Renderable('player')]);
   }
 
   List<EntitySystem> getSystems() {
     return [
             new TweeningSystem(),
+
+            new InputHandlingSystem(),
+            new DirectionSystem(),
+
+            new GravitySystem(),
+            new AccelerationSystem(),
+            new MovementSystem(),
 
             new WebGlCanvasCleaningSystem(ctx),
             new SpriteRenderingSystem(ctx, spriteSheet),
