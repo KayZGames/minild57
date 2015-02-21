@@ -84,7 +84,7 @@ class AnimationSystem extends EntityProcessingSystem {
   void processEntity(Entity entity) {
     var r = rm[entity];
 
-    r.frame = (5 * world.time % r.maxFrames).toInt();
+    r.frame = (r.maxFrames - 5 * world.time % r.maxFrames).toInt();
   }
 }
 
