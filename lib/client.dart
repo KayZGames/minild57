@@ -32,6 +32,7 @@ class Game extends GameBase {
   List<EntitySystem> getSystems() {
     return [
             new TweeningSystem(),
+            new SoundSystem(helper.audioHelper),
 
             new InputHandlingSystem(),
             new DustSpawningSystem(),
@@ -56,6 +57,7 @@ class Game extends GameBase {
 
   onInit() {
     world.addManager(new TagManager());
+    return helper.audioHelper.loadAudioClips(['jump', 'jump_landing']);
   }
 }
 

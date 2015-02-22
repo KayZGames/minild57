@@ -6,7 +6,14 @@ Matrix4 createViewMatrix(TagManager tm, Mapper<Position> pm, Mapper<Velocity> vm
   var v = vm[e];
   var offsetX = -v.x / 8.0;
   var viewMatrix = new Matrix4.identity();
-  setOrthographicMatrix(viewMatrix, p.x - 400.0 + offsetX, p.x + 400 + offsetX, p.y - 128.0, p.y + 472.0, 1, -1);
+  setOrthographicMatrix(
+      viewMatrix,
+      p.x - 400.0 + offsetX,
+      p.x + 400 + offsetX,
+      p.y - 128.0,
+      p.y + 472.0,
+      1,
+      -1);
   return viewMatrix;
 }
 
@@ -31,15 +38,16 @@ class SpriteRenderingSystem extends WebGlRenderingSystem {
     var texture = gl.createTexture();
     var uTexture = gl.getUniformLocation(program, 'uTexture');
 
-    gl..useProgram(program)
-      ..pixelStorei(UNPACK_FLIP_Y_WEBGL, 0)
-      ..activeTexture(TEXTURE0)
-      ..bindTexture(TEXTURE_2D, texture)
-      ..texParameteri(TEXTURE_2D, TEXTURE_MIN_FILTER, LINEAR)
-      ..texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_EDGE)
-      ..texImage2DImage(TEXTURE_2D, 0, RGBA, RGBA, UNSIGNED_BYTE, sheet.image)
-      ..uniform1i(uTexture, 0)
-      ..uniform2f(gl.getUniformLocation(program, 'uSize'), sheet.image.width, sheet.image.height);
+    gl
+        ..useProgram(program)
+        ..pixelStorei(UNPACK_FLIP_Y_WEBGL, 0)
+        ..activeTexture(TEXTURE0)
+        ..bindTexture(TEXTURE_2D, texture)
+        ..texParameteri(TEXTURE_2D, TEXTURE_MIN_FILTER, LINEAR)
+        ..texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_EDGE)
+        ..texImage2DImage(TEXTURE_2D, 0, RGBA, RGBA, UNSIGNED_BYTE, sheet.image)
+        ..uniform1i(uTexture, 0)
+        ..uniform2f(gl.getUniformLocation(program, 'uSize'), sheet.image.width, sheet.image.height);
   }
 
   @override

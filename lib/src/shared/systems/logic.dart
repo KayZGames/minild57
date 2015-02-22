@@ -31,6 +31,7 @@ class MovementSystem extends EntityProcessingSystem {
     var v = vm[entity];
     var p = pm[entity];
 
+    var oldPy = p.y;
     p.x += v.x * world.delta;
     p.y += v.y * world.delta;
 
@@ -38,6 +39,9 @@ class MovementSystem extends EntityProcessingSystem {
       p.y = 0.0;
       v.y = 0.0;
       v.x *= 0.9;
+      if (oldPy > 0.0) {
+        world.createAndAddEntity([new Sound('jump')]);
+      }
     } else {
       var airDragMod = v.x.abs() / 1200.0;
       v.x *= (1.0 - airDragMod * airDragMod * airDragMod) * 1.02;
@@ -172,8 +176,10 @@ class DelayedJumpSystem extends EntityProcessingSystem {
     if (dj.value <= 0.0) {
       var v = vm[entity];
       v.y = 6.0 * PIXEL_PER_METER;
-      entity..removeComponent(DelayedJump)
-            ..changedInWorld();
+      entity
+          ..removeComponent(DelayedJump)
+          ..changedInWorld();
+      world.createAndAddEntity([new Sound('jump_landing')]);
     }
   }
 }
