@@ -17,7 +17,7 @@ Matrix4 createViewMatrix(TagManager tm, Mapper<Position> pm, Mapper<Velocity> vm
   return viewMatrix;
 }
 
-class SpriteRenderingSystem extends WebGlRenderingSystem {
+abstract class WebGlSpriteRenderingSystem extends WebGlRenderingSystem {
   Mapper<Position> pm;
   Mapper<Velocity> vm;
   Mapper<Renderable> rm;
@@ -29,7 +29,7 @@ class SpriteRenderingSystem extends WebGlRenderingSystem {
   Float32List values;
   Uint16List indices;
 
-  SpriteRenderingSystem(RenderingContext gl, this.sheet) : super(gl, Aspect.getAspectForAllOf([Position, Renderable]));
+  WebGlSpriteRenderingSystem(RenderingContext gl, this.sheet, Aspect aspect) : super(gl, aspect);
 
   @override
   void initialize() {
@@ -52,39 +52,47 @@ class SpriteRenderingSystem extends WebGlRenderingSystem {
 
   @override
   void processEntity(int index, Entity entity) {
-    var p = pm[entity];
+    var p = getPosition(entity);
     var r = rm[entity];
-    var dst = sheet.sprites[r.name].dst;
-    var src = sheet.sprites[r.name].src;
+    var sprite = sheet.sprites[r.name];
+    var dst = sprite.dst;
+    var src = sprite.src;
+    var size = sprite.sourceSize;
     double right;
     double left;
+    int dstLeft;
+    int dstRight;
     if (r.facesRight) {
       left = src.left.toDouble() + 1.0;
       right = src.right.toDouble() - 1.0;
+      dstLeft = dst.left;
+      dstRight = dst.right;
     } else {
       right = src.left.toDouble() + 1.0;
       left = src.right.toDouble() - 1.0;
+      dstLeft = -dst.right;
+      dstRight = -dst.left;
     }
     var bottom = src.bottom.toDouble();
     var top = src.top.toDouble();
 
-    values[index * 16] = p.x - dst.width / 2;
-    values[index * 16 + 1] = p.y;
+    values[index * 16] = p.x + dstLeft;
+    values[index * 16 + 1] = p.y - dst.bottom;
     values[index * 16 + 2] = left;
     values[index * 16 + 3] = bottom;
 
-    values[index * 16 + 4] = p.x + dst.width / 2;
-    values[index * 16 + 5] = p.y;
+    values[index * 16 + 4] = p.x + dstRight;
+    values[index * 16 + 5] = p.y - dst.bottom;
     values[index * 16 + 6] = right;
     values[index * 16 + 7] = bottom;
 
-    values[index * 16 + 8] = p.x - dst.width / 2;
-    values[index * 16 + 9] = p.y + dst.height;
+    values[index * 16 + 8] = p.x + dstLeft;
+    values[index * 16 + 9] = p.y - dst.top;
     values[index * 16 + 10] = left;
     values[index * 16 + 11] = top;
 
-    values[index * 16 + 12] = p.x + dst.width / 2;
-    values[index * 16 + 13] = p.y + dst.height;
+    values[index * 16 + 12] = p.x + dstRight;
+    values[index * 16 + 13] = p.y - dst.top;
     values[index * 16 + 14] = right;
     values[index * 16 + 15] = top;
 
@@ -94,6 +102,10 @@ class SpriteRenderingSystem extends WebGlRenderingSystem {
     indices[index * 6 + 3] = index * 4;
     indices[index * 6 + 4] = index * 4 + 3;
     indices[index * 6 + 5] = index * 4 + 1;
+  }
+
+  Position getPosition(Entity entity) {
+    return pm[entity];
   }
 
   @override
@@ -117,4 +129,19 @@ class SpriteRenderingSystem extends WebGlRenderingSystem {
 
   @override
   String get fShaderFile => 'SpriteRenderingSystem';
+}
+
+class SpriteRenderingSystem extends WebGlSpriteRenderingSystem {
+  SpriteRenderingSystem(RenderingContext gl, SpriteSheet sheet) : super(gl, sheet, Aspect.getAspectForAllOf([Position, Renderable]));
+}
+
+class EquipmentRenderingSystem extends WebGlSpriteRenderingSystem {
+  EquipmentRenderingSystem(RenderingContext gl, SpriteSheet sheet) : super(gl, sheet, Aspect.getAspectForAllOf([Equipment, Renderable]));
+
+  @override
+  Position getPosition(Entity entity) {
+    var player = tm.getEntity(playerTag);
+    rm[entity].facesRight = rm[player].facesRight;
+    return pm[player];
+  }
 }

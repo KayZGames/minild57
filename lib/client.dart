@@ -22,6 +22,7 @@ class Game extends GameBase {
     TagManager tm = world.getManager(TagManager);
     var player = addEntity([new Controller(), new Position(400.0, 0.0), new Acceleration(), new Velocity(), new Renderable('player')]);
     tm.register(player, playerTag);
+    addEntity([new Equipment(), new Renderable('sword')]);
 
     addEntity([new Position(700.0, 0.0), new Acceleration(), new Velocity(), new Renderable('monster_0', 4), new Ai(400.0, 1000.0, 10.0 * PIXEL_PER_METER)]);
     for (int i = 0; i < 800; i += 64) {
@@ -46,11 +47,11 @@ class Game extends GameBase {
 
             new WebGlCanvasCleaningSystem(ctx),
             new SpriteRenderingSystem(ctx, spriteSheet),
+            new EquipmentRenderingSystem(ctx, spriteSheet),
 
             new LifetimeSystem(),
             new DelayedJumpSystem(),
 
-//            new FpsRenderingSystem(ctx),
             new AnalyticsSystem(AnalyticsSystem.GITHUB, 'minild57')
     ];
   }

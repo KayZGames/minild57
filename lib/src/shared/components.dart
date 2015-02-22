@@ -43,3 +43,5 @@ class DelayedJump extends Component {
   double value;
   DelayedJump(this.value);
 }
+
+class Equipment extends Component {}

@@ -137,7 +137,7 @@ class DustSpawningSystem extends EntitySystem {
       world.createAndAddEntity(
           [
               new Renderable('dust_${random.nextInt(2)}', 4, 0.05, random.nextBool()),
-              new Position(-32 + p.x + random.nextInt(64) + offsetX, p.y - 10 - random.nextInt(20)),
+              new Position(-32 + p.x + random.nextInt(64) + offsetX, p.y + 5 - random.nextInt(10)),
               new Lifetime(0.2)]);
     }
     spawn = false;
