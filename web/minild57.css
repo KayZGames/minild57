@@ -1,3 +1,9 @@
 body {
   text-align: center;
 }
+
+fieldset {
+  width: 700px;
+  text-align: left;
+  margin: auto;
+}

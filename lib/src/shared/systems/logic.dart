@@ -84,7 +84,7 @@ class AnimationSystem extends EntityProcessingSystem {
   void processEntity(Entity entity) {
     var r = rm[entity];
 
-    r.frame = (r.maxFrames - 5 * world.time % r.maxFrames).toInt();
+    r.time += world.delta;
   }
 }
 
@@ -112,6 +112,68 @@ class AiSystem extends EntityProcessingSystem {
       a.x = ai.acc;
     } else {
       a.x = ai.acc * FastMath.signum(v.x);
+    }
+  }
+}
+
+class DustSpawningSystem extends EntitySystem {
+  TagManager tm;
+  Mapper<Position> pm;
+
+  bool spawn = false;
+  double offsetX = 0.0;
+
+  DustSpawningSystem() : super(Aspect.getEmpty());
+
+  @override
+  void processEntities(Iterable<Entity> entities) {
+    var player = tm.getEntity(playerTag);
+    var p = pm[player];
+    for (int i = 0; i < 5; i++) {
+      world.createAndAddEntity(
+          [
+              new Renderable('dust_${random.nextInt(2)}', 4, 0.05, random.nextBool()),
+              new Position(-32 + p.x + random.nextInt(64) + offsetX, p.y - 10 - random.nextInt(20)),
+              new Lifetime(0.2)]);
+    }
+    spawn = false;
+  }
+
+  @override
+  bool checkProcessing() => spawn;
+}
+
+
+class LifetimeSystem extends EntityProcessingSystem {
+  Mapper<Lifetime> lm;
+  LifetimeSystem() : super(Aspect.getAspectForAllOf([Lifetime]));
+
+  @override
+  void processEntity(Entity entity) {
+    var l = lm[entity];
+    l.value -= world.delta;
+    if (l.value <= 0.0) {
+      entity.deleteFromWorld();
+    }
+  }
+}
+
+class DelayedJumpSystem extends EntityProcessingSystem {
+  Mapper<Velocity> vm;
+  Mapper<DelayedJump> djm;
+
+  DelayedJumpSystem() : super(Aspect.getAspectForAllOf([DelayedJump, Velocity]));
+
+  @override
+  void processEntity(Entity entity) {
+    var dj = djm[entity];
+
+    dj.value -= world.delta;
+    if (dj.value <= 0.0) {
+      var v = vm[entity];
+      v.y = 6.0 * PIXEL_PER_METER;
+      entity..removeComponent(DelayedJump)
+            ..changedInWorld();
     }
   }
 }

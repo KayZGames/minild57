@@ -6,6 +6,6 @@ varying vec2 vTexCoord;
 
 void main() {
 	vec4 color = texture2D(uSheet, vTexCoord / uSize);;
-	if (color.a < 1.0) discard;
+	// if (color.a < 1.0) discard;
 	gl_FragColor = color;
 }

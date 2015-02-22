@@ -18,12 +18,13 @@ class Acceleration extends Component {
 
 class Renderable extends Component {
   String _name;
-  int frame;
   int maxFrames;
+  double timePerFrame;
+  double time;
   bool facesRight;
-  Renderable(this._name, [this.frame = 0, this.maxFrames = 1, this.facesRight = true]);
+  Renderable(this._name, [this.maxFrames = 1, this.timePerFrame = 0.2, this.facesRight = true, this.time = 0.0]);
 
-  String get name => '${_name}_${frame}';
+  String get name => '${_name}_${maxFrames - (time / timePerFrame % maxFrames).toInt() - 1}';
 }
 
 class Controller extends Component {}
@@ -31,4 +32,14 @@ class Controller extends Component {}
 class Ai extends Component {
   double xMin, xMax, acc;
   Ai(this.xMin, this.xMax, this.acc);
+}
+
+class Lifetime extends Component {
+  double value;
+  Lifetime(this.value);
+}
+
+class DelayedJump extends Component {
+  double value;
+  DelayedJump(this.value);
 }
