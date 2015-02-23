@@ -145,3 +145,36 @@ class EquipmentRenderingSystem extends WebGlSpriteRenderingSystem {
     return pm[player];
   }
 }
+
+class BackgroundRenderingSystem extends VoidWebGlRenderingSystem {
+  TagManager tm;
+  Mapper<Position> pm;
+
+  Float32List positions;
+
+  BackgroundRenderingSystem(RenderingContext gl) : super(gl);
+
+  @override
+  void initialize() {
+    super.initialize();
+    positions = new Float32List.fromList([
+      -1.0, 1.0, 1.0, 1.0, -1.0, -1.0, 1.0, -1.0
+      ]);
+  }
+
+  @override
+  void render() {
+    var y = pm[tm.getEntity(playerTag)].y / 300;
+
+    buffer('aPosition', positions, 2);
+
+    gl.uniform1f(gl.getUniformLocation(program, 'uPlayerY'), y);
+    gl.drawArrays(TRIANGLE_STRIP, 0, 4);
+  }
+
+  @override
+  String get vShaderFile => 'BackgroundRenderingSystem';
+
+  @override
+  String get fShaderFile => 'BackgroundRenderingSystem';
+}

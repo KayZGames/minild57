@@ -46,6 +46,7 @@ class Game extends GameBase {
             new MovementSystem(),
 
             new WebGlCanvasCleaningSystem(ctx),
+            new BackgroundRenderingSystem(ctx),
             new SpriteRenderingSystem(ctx, spriteSheet),
             new EquipmentRenderingSystem(ctx, spriteSheet),
 
