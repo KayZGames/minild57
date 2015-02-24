@@ -12,7 +12,7 @@ class AccelerationSystem extends EntityProcessingSystem {
     var a = am[entity];
     var v = vm[entity];
 
-    v.x += a.x * world.delta;
+    v.x = v.x * 0.9 + a.x * world.delta;
     v.y += a.y * world.delta;
 
     a.x = 0.0;
@@ -38,13 +38,9 @@ class MovementSystem extends EntityProcessingSystem {
     if (p.y <= 0.0) {
       p.y = 0.0;
       v.y = 0.0;
-      v.x *= 0.9;
       if (oldPy > 0.0) {
         world.createAndAddEntity([new Sound('jump')]);
       }
-    } else {
-      var airDragMod = v.x.abs() / 1200.0;
-      v.x *= (1.0 - airDragMod * airDragMod * airDragMod) * 1.02;
     }
   }
 }
@@ -180,6 +176,25 @@ class DelayedJumpSystem extends EntityProcessingSystem {
           ..removeComponent(DelayedJump)
           ..changedInWorld();
       world.createAndAddEntity([new Sound('jump_landing')]);
+    }
+  }
+}
+
+class RealityDistortionSystem extends VoidEntitySystem {
+  TagManager tm;
+
+  Mapper<Position> pm;
+
+  @override
+  void processSystem() {
+    var player = tm.getEntity(playerTag);
+    var future = tm.getEntity(futureTag);
+
+    var pp = pm[player];
+    var fp = pm[future];
+
+    if (fp.x < pp.x) {
+      gameState.realityDistortion += world.delta;
     }
   }
 }

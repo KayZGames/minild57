@@ -27,7 +27,11 @@ class Renderable extends Component {
   String get name => '${_name}_${maxFrames - (time / timePerFrame % maxFrames).toInt() - 1}';
 }
 
-class Controller extends Component {}
+class Controller extends Component {
+  static const double maxAttackCooldown = 0.2;
+  double attackCooldown;
+  Controller([this.attackCooldown = 0.0]);
+}
 
 class Ai extends Component {
   double xMin, xMax, acc;

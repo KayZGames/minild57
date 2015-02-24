@@ -8,10 +8,10 @@ Matrix4 createViewMatrix(TagManager tm, Mapper<Position> pm, Mapper<Velocity> vm
   var viewMatrix = new Matrix4.identity();
   setOrthographicMatrix(
       viewMatrix,
-      p.x - 400.0 + offsetX,
-      p.x + 400 + offsetX,
-      p.y - 128.0,
-      p.y + 472.0,
+      p.x - 400.0 + offsetX + random.nextDouble() * gameState.realityDistortion,
+      p.x + 400 + offsetX + random.nextDouble() * gameState.realityDistortion,
+      p.y - 128.0 + random.nextDouble() * gameState.realityDistortion,
+      p.y + 472.0 + random.nextDouble() * gameState.realityDistortion,
       1,
       -1);
   return viewMatrix;
@@ -132,7 +132,11 @@ abstract class WebGlSpriteRenderingSystem extends WebGlRenderingSystem {
 }
 
 class SpriteRenderingSystem extends WebGlSpriteRenderingSystem {
-  SpriteRenderingSystem(RenderingContext gl, SpriteSheet sheet) : super(gl, sheet, Aspect.getAspectForAllOf([Position, Renderable]));
+  SpriteRenderingSystem(RenderingContext gl, SpriteSheet sheet) : super(gl, sheet, Aspect.getAspectForAllOf([Position, Renderable]).exclude([Controller]));
+}
+
+class PlayerRenderingSystem extends WebGlSpriteRenderingSystem {
+  PlayerRenderingSystem(RenderingContext gl, SpriteSheet sheet) : super(gl, sheet, Aspect.getAspectForAllOf([Position, Renderable, Controller]));
 }
 
 class EquipmentRenderingSystem extends WebGlSpriteRenderingSystem {
@@ -177,4 +181,42 @@ class BackgroundRenderingSystem extends VoidWebGlRenderingSystem {
 
   @override
   String get fShaderFile => 'BackgroundRenderingSystem';
+}
+
+class FutureRenderingSystem extends VoidWebGlRenderingSystem {
+  TagManager tm;
+  Mapper<Position> pm;
+  Mapper<Velocity> vm;
+
+  Float32List positions;
+
+  FutureRenderingSystem(RenderingContext gl) : super(gl);
+
+  @override
+  void initialize() {
+    super.initialize();
+    positions = new Float32List.fromList([
+      -1.0, 1.0, 1.0, 1.0, -1.0, -1.0, 1.0, -1.0
+      ]);
+  }
+
+  @override
+  void render() {
+    var player = pm[tm.getEntity(playerTag)];
+    var playerVel = vm[tm.getEntity(playerTag)];
+    var futureX = pm[tm.getEntity(futureTag)].x;
+
+    buffer('aPosition', positions, 2);
+
+    gl.uniform1f(gl.getUniformLocation(program, 'uFutureX'), futureX / 400.0);
+    gl.uniform2fv(gl.getUniformLocation(program, 'uPlayer'), new Float32List.fromList([(player.x - playerVel.x / 8) / 400.0, player.y / 300.0]));
+    gl.uniform1f(gl.getUniformLocation(program, 'uTime'), world.time);
+    gl.drawArrays(TRIANGLE_STRIP, 0, 4);
+  }
+
+  @override
+  String get vShaderFile => 'FutureRenderingSystem';
+
+  @override
+  String get fShaderFile => 'FutureRenderingSystem';
 }

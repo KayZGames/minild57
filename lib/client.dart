@@ -20,7 +20,7 @@ class Game extends GameBase {
 
   void createEntities() {
     TagManager tm = world.getManager(TagManager);
-    var player = addEntity([new Controller(), new Position(400.0, 0.0), new Acceleration(), new Velocity(), new Renderable('player')]);
+    var player = addEntity([new Controller(), new Position(10000.0, 0.0), new Acceleration(), new Velocity(), new Renderable('player')]);
     tm.register(player, playerTag);
     addEntity([new Equipment(), new Renderable('sword')]);
 
@@ -28,6 +28,8 @@ class Game extends GameBase {
     for (int i = 0; i < 800; i += 64) {
       addEntity([new Position(i.toDouble(), -64.0), new Renderable('ground', 1, 1.0, random.nextBool())]);
     }
+    var future = addEntity([new Position(11000.0, 0.0), new Velocity(-100.0, 0.0)]);
+    tm.register(future, futureTag);
   }
 
   List<EntitySystem> getSystems() {
@@ -48,10 +50,13 @@ class Game extends GameBase {
             new WebGlCanvasCleaningSystem(ctx),
             new BackgroundRenderingSystem(ctx),
             new SpriteRenderingSystem(ctx, spriteSheet),
+            new FutureRenderingSystem(ctx),
+            new PlayerRenderingSystem(ctx, spriteSheet),
             new EquipmentRenderingSystem(ctx, spriteSheet),
 
             new LifetimeSystem(),
             new DelayedJumpSystem(),
+            new RealityDistortionSystem(),
 
             new AnalyticsSystem(AnalyticsSystem.GITHUB, 'minild57')
     ];
