@@ -20,15 +20,15 @@ class Game extends GameBase {
 
   void createEntities() {
     TagManager tm = world.getManager(TagManager);
-    var player = addEntity([new Controller(), new Position(10000.0, 0.0), new Acceleration(), new Velocity(), new Renderable('player')]);
+    var player = addEntity([new Controller(), new Position(-1000.0, 0.0), new Acceleration(), new Velocity(), new Renderable('player')]);
     tm.register(player, playerTag);
     addEntity([new Equipment(), new Renderable('sword')]);
 
-    addEntity([new Position(700.0, 0.0), new Acceleration(), new Velocity(), new Renderable('monster_0', 4), new Ai(400.0, 1000.0, 10.0 * PIXEL_PER_METER)]);
+    addEntity([new Position(-1000.0, 0.0), new Acceleration(), new Velocity(), new Renderable('monster_0', 4), new Ai(-1500.0, 500.0, 10.0 * PIXEL_PER_METER)]);
     for (int i = 0; i < 800; i += 64) {
-      addEntity([new Position(i.toDouble(), -64.0), new Renderable('ground', 1, 1.0, random.nextBool())]);
+      addEntity([new Position(i.toDouble() - 1500.0, -64.0), new Renderable('ground', 1, 1.0, random.nextBool())]);
     }
-    var future = addEntity([new Position(11000.0, 0.0), new Velocity(-100.0, 0.0)]);
+    var future = addEntity([new Position(0.0, 0.0), new Velocity(-100.0, 0.0)]);
     tm.register(future, futureTag);
   }
 
@@ -49,6 +49,7 @@ class Game extends GameBase {
 
             new WebGlCanvasCleaningSystem(ctx),
             new BackgroundRenderingSystem(ctx),
+            new BackgroundLayer0RenderingSystem(ctx),
             new SpriteRenderingSystem(ctx, spriteSheet),
             new FutureRenderingSystem(ctx),
             new PlayerRenderingSystem(ctx, spriteSheet),
