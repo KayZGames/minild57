@@ -18,13 +18,14 @@ class Acceleration extends Component {
 
 class Renderable extends Component {
   String _name;
+  String state;
   int maxFrames;
   double timePerFrame;
   double time;
   bool facesRight;
-  Renderable(this._name, [this.maxFrames = 1, this.timePerFrame = 0.2, this.facesRight = true, this.time = 0.0]);
+  Renderable(this._name, [this.maxFrames = 1, this.timePerFrame = 0.2, this.facesRight = true, this.time = 0.0, this.state = '']);
 
-  String get name => '${_name}_${maxFrames - (time / timePerFrame % maxFrames).toInt() - 1}';
+  String get name => '${_name}_$state${maxFrames - (time / timePerFrame % maxFrames).toInt() - 1}';
 }
 
 class Controller extends Component {

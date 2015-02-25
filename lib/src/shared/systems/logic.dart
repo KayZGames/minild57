@@ -23,6 +23,7 @@ class AccelerationSystem extends EntityProcessingSystem {
 class MovementSystem extends EntityProcessingSystem {
   Mapper<Velocity> vm;
   Mapper<Position> pm;
+  Mapper<Renderable> rm;
 
   MovementSystem() : super(Aspect.getAspectForAllOf([Position, Velocity]));
 
@@ -40,6 +41,7 @@ class MovementSystem extends EntityProcessingSystem {
       v.y = 0.0;
       if (oldPy > 0.0) {
         world.createAndAddEntity([new Sound('jump')]);
+        rm[entity].state = '';
       }
     }
   }
@@ -161,8 +163,9 @@ class LifetimeSystem extends EntityProcessingSystem {
 class DelayedJumpSystem extends EntityProcessingSystem {
   Mapper<Velocity> vm;
   Mapper<DelayedJump> djm;
+  Mapper<Renderable> rm;
 
-  DelayedJumpSystem() : super(Aspect.getAspectForAllOf([DelayedJump, Velocity]));
+  DelayedJumpSystem() : super(Aspect.getAspectForAllOf([DelayedJump, Velocity, Renderable]));
 
   @override
   void processEntity(Entity entity) {
@@ -171,6 +174,8 @@ class DelayedJumpSystem extends EntityProcessingSystem {
     dj.value -= world.delta;
     if (dj.value <= 0.0) {
       var v = vm[entity];
+      var r = rm[entity];
+      r.state = 'j';
       v.y = 6.0 * PIXEL_PER_METER;
       entity
           ..removeComponent(DelayedJump)
