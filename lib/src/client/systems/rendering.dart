@@ -6,12 +6,13 @@ Matrix4 createViewMatrix(TagManager tm, Mapper<Position> pm, Mapper<Velocity> vm
   var v = vm[e];
   var offsetX = -v.x / 8.0;
   var viewMatrix = new Matrix4.identity();
+  var nextDouble = random.nextDouble();
   setOrthographicMatrix(
       viewMatrix,
-      p.x - 400.0 + offsetX + random.nextDouble() * gameState.realityDistortion,
-      p.x + 400 + offsetX + random.nextDouble() * gameState.realityDistortion,
-      p.y - 128.0 + random.nextDouble() * gameState.realityDistortion,
-      p.y + 472.0 + random.nextDouble() * gameState.realityDistortion,
+      p.x - 400.0 + offsetX + nextDouble * gameState.realityDistortion,
+      p.x + 400 + offsetX - nextDouble * gameState.realityDistortion,
+      p.y - 128.0 + nextDouble * gameState.realityDistortion,
+      p.y + 472.0 - nextDouble * gameState.realityDistortion,
       1,
       -1);
   return viewMatrix;
