@@ -50,3 +50,5 @@ class DelayedJump extends Component {
 }
 
 class Equipment extends Component {}
+
+class DeadMonster extends Component {}

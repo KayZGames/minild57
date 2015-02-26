@@ -203,3 +203,37 @@ class RealityDistortionSystem extends VoidEntitySystem {
     }
   }
 }
+
+class DeadMonsterAttackSystem extends EntityProcessingSystem {
+  TagManager tm;
+  Mapper<Position> pm;
+  Mapper<Controller> cm;
+  Mapper<Renderable> rm;
+
+  DeadMonsterAttackSystem() : super(Aspect.getAspectForAllOf([Position, DeadMonster]));
+
+  @override
+  void processEntity(Entity entity) {
+    var player = tm.getEntity(playerTag);
+    var p = pm[entity];
+    var pp = pm[player];
+    var r = rm[player];
+    bool spawn = false;
+
+    if (pp.y < 50.0) {
+      var distance = p.x - pp.x;
+      if (r.facesRight && distance > 32 && distance < 96) {
+        spawn = true;
+      } else if (!r.facesRight && distance < -32 && distance > -96) {
+        spawn = true;
+      }
+      if (spawn) {
+        world.createAndAddEntity([new Position(p.x, 0.0), new Acceleration(), new Velocity(), new Renderable('monster_0', 4), new Ai(p.x - 250.0, p.x + 250.0, 10.0 * PIXEL_PER_METER)]);
+        entity.deleteFromWorld();
+      }
+    }
+  }
+
+  @override
+  bool checkProcessing() => Controller.maxAttackCooldown - cm[tm.getEntity(playerTag)].attackCooldown < 0.1;
+}

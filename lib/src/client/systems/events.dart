@@ -17,6 +17,7 @@ class InputHandlingSystem extends GenericInputHandlingSystem {
     var p = pm[entity];
     var v = vm[entity];
     var a = am[entity];
+    var c = cm[entity];
     if (p.y <= 10.0 && v.y == 0.0) {
       if (jump && !djm.has(entity)) {
         entity..addComponent(new DelayedJump(0.15))
@@ -31,14 +32,10 @@ class InputHandlingSystem extends GenericInputHandlingSystem {
     if (right) {
       a.x = -20.0 * PIXEL_PER_METER;
     }
-    if (attack) {
-      var c = cm[entity];
-      if (c.attackCooldown > 0.0) {
-        c.attackCooldown -= world.delta;
-      } else {
-        c.attackCooldown = Controller.maxAttackCooldown;
-        world.createAndAddEntity([new Position(p.x, 0.0), new Acceleration(), new Velocity(), new Renderable('monster_0', 4), new Ai(p.x - 200.0, p.x + 200.0, 10.0 * PIXEL_PER_METER)]);
-      }
+    if (c.attackCooldown > 0.0) {
+      c.attackCooldown -= world.delta;
+    } else if (attack) {
+      c.attackCooldown = Controller.maxAttackCooldown;
     }
   }
 
