@@ -43,4 +43,7 @@ class InputHandlingSystem extends GenericInputHandlingSystem {
   bool get right => keyState[KeyCode.D] == true || keyState[KeyCode.RIGHT] == true;
   bool get attack => keyState[KeyCode.J] == true || keyState[KeyCode.X] == true;
   bool get jump => keyState[KeyCode.K] == true || keyState[KeyCode.C] == true;
+
+  @override
+  bool checkProcessing() => gameState.playing;
 }

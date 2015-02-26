@@ -39,7 +39,7 @@ class Game extends GameBase {
     for (int i = 0; i < 20000; i += 50 + random.nextInt(100)) {
       addEntity([new DeadMonster(), new Position(i.toDouble(), 0.0), new Renderable('corpse')]);
     }
-    var future = addEntity([new Position(20000.0, 0.0), new Velocity(-100.0, 0.0)]);
+    var future = addEntity([new Position(22500.0, 0.0), new Velocity(-100.0, 0.0)]);
     tm.register(future, futureTag);
   }
 
@@ -67,6 +67,7 @@ class Game extends GameBase {
             new EquipmentRenderingSystem(ctx, spriteSheet),
 
             new HudRenderingSystem(hudCtx),
+            new EndingScreenRenderingSystem(hudCtx),
 
             new LifetimeSystem(),
             new DelayedJumpSystem(),

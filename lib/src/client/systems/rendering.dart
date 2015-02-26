@@ -265,3 +265,75 @@ class HudRenderingSystem extends VoidEntitySystem {
         ..fillText(text, 400 - width / 2, 42);
   }
 }
+
+
+class EndingScreenRenderingSystem extends VoidEntitySystem {
+  CanvasRenderingContext2D ctx;
+  double time = 0.0;
+  double startY = -700.0;
+
+  List texts = [
+      'Congratulations!',
+      90,
+      '',
+      200,
+      '',
+      200,
+      'You have killed all the monsters in the world.',
+      30,
+      '',
+      30,
+      'But you made a mistake. You have killed Her.',
+      30,
+      'Without Her there can be no life.',
+      30,
+      'The world is doomed.',
+      30,
+      'You\'ll be remembered as the Destroyer of Worlds.',
+      30,
+      'Because it was you, who killed the Goat of Life.',
+      30,
+      '',
+      30,
+      'It\'ll never be possible to undo this mistake.',
+      30,
+      '',
+      200,
+      '',
+      200,
+      '',
+      200,
+      'The End',
+      100];
+
+
+  EndingScreenRenderingSystem(this.ctx);
+
+  @override
+  void processSystem() {
+    var ratio = time / 30;
+    ctx
+        ..save()
+        ..globalAlpha = (1 - ratio * ratio * ratio * ratio)
+        ..fillStyle = 'black'
+        ..clearRect(0, 0, 800, 600)
+        ..fillRect(0, 0, 800, 600)
+        ..fillStyle = 'white';
+    for (int i = 0; i < texts.length; i += 2) {
+      var text = texts[i] as String;
+      var height = texts[i + 1] as int;
+      ctx.font = '${height}px Verdana';
+      var width = ctx.measureText(text).width;
+      ctx.fillText(text, 400 - width / 2, startY + i * 20 + time * 40);
+    }
+    ctx.restore();
+
+    time += world.delta;
+    if (time >= 30) {
+      gameState.playing = true;
+    }
+  }
+
+  @override
+  bool checkProcessing() => time < 30;
+}
