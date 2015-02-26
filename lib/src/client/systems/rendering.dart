@@ -133,15 +133,18 @@ abstract class WebGlSpriteRenderingSystem extends WebGlRenderingSystem {
 }
 
 class SpriteRenderingSystem extends WebGlSpriteRenderingSystem {
-  SpriteRenderingSystem(RenderingContext gl, SpriteSheet sheet) : super(gl, sheet, Aspect.getAspectForAllOf([Position, Renderable]).exclude([Controller]));
+  SpriteRenderingSystem(RenderingContext gl, SpriteSheet sheet)
+      : super(gl, sheet, Aspect.getAspectForAllOf([Position, Renderable]).exclude([Controller]));
 }
 
 class PlayerRenderingSystem extends WebGlSpriteRenderingSystem {
-  PlayerRenderingSystem(RenderingContext gl, SpriteSheet sheet) : super(gl, sheet, Aspect.getAspectForAllOf([Position, Renderable, Controller]));
+  PlayerRenderingSystem(RenderingContext gl, SpriteSheet sheet)
+      : super(gl, sheet, Aspect.getAspectForAllOf([Position, Renderable, Controller]));
 }
 
 class EquipmentRenderingSystem extends WebGlSpriteRenderingSystem {
-  EquipmentRenderingSystem(RenderingContext gl, SpriteSheet sheet) : super(gl, sheet, Aspect.getAspectForAllOf([Equipment, Renderable]));
+  EquipmentRenderingSystem(RenderingContext gl, SpriteSheet sheet)
+      : super(gl, sheet, Aspect.getAspectForAllOf([Equipment, Renderable]));
 
   @override
   Position getPosition(Entity entity) {
@@ -163,9 +166,7 @@ abstract class VoidFullScreenRenderingSystem extends VoidWebGlRenderingSystem {
   @override
   void initialize() {
     super.initialize();
-    positions = new Float32List.fromList([
-      -1.0, 1.0, 1.0, 1.0, -1.0, -1.0, 1.0, -1.0
-      ]);
+    positions = new Float32List.fromList([-1.0, 1.0, 1.0, 1.0, -1.0, -1.0, 1.0, -1.0]);
   }
 
   @override
@@ -209,7 +210,9 @@ class FutureRenderingSystem extends VoidFullScreenRenderingSystem {
     var futureX = pm[tm.getEntity(futureTag)].x;
 
     gl.uniform1f(gl.getUniformLocation(program, 'uFutureX'), futureX / 400.0);
-    gl.uniform2fv(gl.getUniformLocation(program, 'uPlayer'), new Float32List.fromList([(playerPos.x - playerVel.x / 8) / 400.0, playerPos.y / 300.0]));
+    gl.uniform2fv(
+        gl.getUniformLocation(program, 'uPlayer'),
+        new Float32List.fromList([(playerPos.x - playerVel.x / 8) / 400.0, playerPos.y / 300.0]));
     gl.uniform1f(gl.getUniformLocation(program, 'uTime'), world.time);
   }
 
@@ -229,7 +232,9 @@ class BackgroundLayer0RenderingSystem extends VoidFullScreenRenderingSystem {
     var playerPos = pm[player];
     var playerVel = vm[player];
 
-    gl.uniform2fv(gl.getUniformLocation(program, 'uPlayerPos'), new Float32List.fromList([(playerPos.x - playerVel.x / 8) / 400.0, playerPos.y / 300.0]));
+    gl.uniform2fv(
+        gl.getUniformLocation(program, 'uPlayerPos'),
+        new Float32List.fromList([(playerPos.x - playerVel.x / 8) / 400.0, playerPos.y / 300.0]));
     gl.uniform1f(gl.getUniformLocation(program, 'uTime'), world.time);
   }
 
@@ -239,4 +244,24 @@ class BackgroundLayer0RenderingSystem extends VoidFullScreenRenderingSystem {
   @override
   String get fShaderFile => 'BackgroundLayer0RenderingSystem';
 
+}
+
+
+class HudRenderingSystem extends VoidEntitySystem {
+  CanvasRenderingContext2D ctx;
+
+  HudRenderingSystem(this.ctx);
+
+  @override
+  void processSystem() {
+    var text = 'R E A L I T Y   D I S T O R T I O N';
+    var width = ctx.measureText(text).width;
+    ctx
+        ..strokeStyle = 'white'
+        ..fillStyle = 'red'
+        ..fillRect(50, 40, gameState.realityDistortion * 60, 20)
+        ..strokeRect(50, 40, 700, 20)
+        ..fillStyle = 'cyan'
+        ..fillText(text, 400 - width / 2, 42);
+  }
 }

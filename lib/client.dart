@@ -16,7 +16,15 @@ part 'src/client/systems/rendering.dart';
 
 class Game extends GameBase {
 
-  Game() : super('minild57', 'canvas', 800, 600, webgl: true, bodyDefsName: null);
+  CanvasElement hudCanvas;
+  CanvasRenderingContext2D hudCtx;
+
+  Game() : super('minild57', '#webgl', 800, 600, webgl: true, bodyDefsName: null) {
+    hudCanvas = querySelector('#context2d');
+    hudCtx = hudCanvas.context2D;
+    hudCtx..textBaseline = 'top'
+          ..font = '12px Verdana';
+  }
 
   void createEntities() {
     TagManager tm = world.getManager(TagManager);
@@ -57,6 +65,8 @@ class Game extends GameBase {
             new FutureRenderingSystem(ctx),
             new PlayerRenderingSystem(ctx, spriteSheet),
             new EquipmentRenderingSystem(ctx, spriteSheet),
+
+            new HudRenderingSystem(hudCtx),
 
             new LifetimeSystem(),
             new DelayedJumpSystem(),

@@ -7,3 +7,19 @@ fieldset {
   text-align: left;
   margin: auto;
 }
+
+#gamecontainer {
+  position: relative;
+  display: inline-block;
+  width: 800px;
+  height: 600px;
+  margin: auto;
+}
+
+canvas {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 800px;
+  height: 600px;
+}

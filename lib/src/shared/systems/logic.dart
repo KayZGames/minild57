@@ -218,17 +218,23 @@ class DeadMonsterAttackSystem extends EntityProcessingSystem {
     var p = pm[entity];
     var pp = pm[player];
     var r = rm[player];
-    bool spawn = false;
+    int spawn = 0;
 
     if (pp.y < 50.0) {
       var distance = p.x - pp.x;
       if (r.facesRight && distance > 32 && distance < 96) {
-        spawn = true;
+        spawn = 1;
       } else if (!r.facesRight && distance < -32 && distance > -96) {
-        spawn = true;
+        spawn = -1;
       }
-      if (spawn) {
-        world.createAndAddEntity([new Position(p.x, 0.0), new Acceleration(), new Velocity(), new Renderable('monster_0', 4), new Ai(p.x - 250.0, p.x + 250.0, 10.0 * PIXEL_PER_METER)]);
+      if (spawn != 0) {
+        world.createAndAddEntity(
+            [
+                new Position(p.x, 0.0),
+                new Acceleration(),
+                new Velocity(spawn.toDouble()),
+                new Renderable('monster_0', 4),
+                new Ai(p.x - 250.0, p.x + 250.0, 10.0 * PIXEL_PER_METER)]);
         entity.deleteFromWorld();
       }
     }
@@ -237,3 +243,5 @@ class DeadMonsterAttackSystem extends EntityProcessingSystem {
   @override
   bool checkProcessing() => Controller.maxAttackCooldown - cm[tm.getEntity(playerTag)].attackCooldown < 0.1;
 }
+
+
