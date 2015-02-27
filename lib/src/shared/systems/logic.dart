@@ -44,6 +44,9 @@ class MovementSystem extends EntityProcessingSystem {
         rm[entity].state = '';
       }
     }
+    if (p.x < -64) {
+      p.x = -64.0;
+    }
   }
 }
 
@@ -210,7 +213,12 @@ class DeadMonsterAttackSystem extends EntityProcessingSystem {
   Mapper<Controller> cm;
   Mapper<Renderable> rm;
   Mapper<DeadMonster> dmm;
-  var framesPerMonster = <int, int>{0: 4, 1: 4, 2: 6, 3: 1};
+  var framesPerMonster = <int, int>{
+    0: 4,
+    1: 4,
+    2: 6,
+    3: 1
+  };
 
   DeadMonsterAttackSystem() : super(Aspect.getAspectForAllOf([Position, DeadMonster]));
 
@@ -238,6 +246,14 @@ class DeadMonsterAttackSystem extends EntityProcessingSystem {
                 new Velocity(spawn.toDouble()),
                 new Renderable('monster_${monsterId}', framesPerMonster[monsterId], 0.8 / framesPerMonster[monsterId]),
                 new Ai(p.x - 150 - random.nextInt(250), p.x + 150.0 + random.nextInt(250), dmm[entity].acc * PIXEL_PER_METER)]);
+
+        for (int i = 0; i < 20; i++) {
+          world.createAndAddEntity(
+              [
+                  new Renderable('dust_${random.nextInt(2)}', 4, 0.05, random.nextBool()),
+                  new Position(-32 + p.x + random.nextInt(64), p.y + random.nextInt(64)),
+                  new Lifetime(0.2)]);
+        }
         entity.deleteFromWorld();
       }
     }
@@ -256,7 +272,7 @@ class AttackStopSystem extends EntityProcessingSystem {
   void processEntity(Entity entity) {
     var c = cm[entity];
     var r = rm[entity];
-    if (c.attackCooldown < 0.0 && r.state == 'a') {
+    if (c.attackCooldown < 0.05 && r.state == 'a') {
       r.state = '';
     }
   }
