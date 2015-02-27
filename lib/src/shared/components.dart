@@ -51,4 +51,8 @@ class DelayedJump extends Component {
 
 class Equipment extends Component {}
 
-class DeadMonster extends Component {}
+class DeadMonster extends Component {
+  int id;
+  double acc;
+  DeadMonster(this.id, [this.acc = 10.0]);
+}

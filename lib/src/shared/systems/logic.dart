@@ -209,7 +209,8 @@ class DeadMonsterAttackSystem extends EntityProcessingSystem {
   Mapper<Position> pm;
   Mapper<Controller> cm;
   Mapper<Renderable> rm;
-  var framesPerMonster = <int, int>{0: 4, 1: 4, 2: 6};
+  Mapper<DeadMonster> dmm;
+  var framesPerMonster = <int, int>{0: 4, 1: 4, 2: 6, 3: 1};
 
   DeadMonsterAttackSystem() : super(Aspect.getAspectForAllOf([Position, DeadMonster]));
 
@@ -229,14 +230,14 @@ class DeadMonsterAttackSystem extends EntityProcessingSystem {
         spawn = -1;
       }
       if (spawn != 0) {
-        var monsterId = random.nextInt(3);
+        var monsterId = dmm[entity].id;
         world.createAndAddEntity(
             [
                 new Position(p.x, 0.0),
                 new Acceleration(),
                 new Velocity(spawn.toDouble()),
                 new Renderable('monster_${monsterId}', framesPerMonster[monsterId], 0.8 / framesPerMonster[monsterId]),
-                new Ai(p.x - 150 - random.nextInt(250), p.x + 150.0 + random.nextInt(250), 10.0 * PIXEL_PER_METER)]);
+                new Ai(p.x - 150 - random.nextInt(250), p.x + 150.0 + random.nextInt(250), dmm[entity].acc * PIXEL_PER_METER)]);
         entity.deleteFromWorld();
       }
     }

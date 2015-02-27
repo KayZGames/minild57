@@ -32,12 +32,12 @@ class Game extends GameBase {
     tm.register(player, playerTag);
     addEntity([new Equipment(), new Renderable('sword')]);
 
-    addEntity([new Position(-1000.0, 0.0), new Acceleration(), new Velocity(), new Renderable('monster_0', 4), new Ai(-1500.0, 500.0, 10.0 * PIXEL_PER_METER)]);
     for (int i = 0; i < 20000; i += 64) {
       addEntity([new Position(i.toDouble(), -64.0), new Renderable('ground', 1, 1.0, random.nextBool())]);
     }
-    for (int i = 0; i < 20000; i += 50 + random.nextInt(100)) {
-      addEntity([new DeadMonster(), new Position(i.toDouble(), 0.0), new Renderable('corpse')]);
+    addEntity([new DeadMonster(3, 0.0), new Position(0.0, 0.0), new Renderable('corpse')]);
+    for (int i = 500; i < 20000; i += 100 + random.nextInt(400)) {
+      addEntity([new DeadMonster(random.nextInt(3)), new Position(i.toDouble(), 0.0), new Renderable('corpse')]);
     }
     var future = addEntity([new Position(22500.0, 0.0), new Velocity(-100.0, 0.0)]);
     tm.register(future, futureTag);
