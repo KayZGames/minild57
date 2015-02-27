@@ -52,6 +52,7 @@ class Game extends GameBase {
             new DustSpawningSystem(),
             new AiSystem(),
             new DirectionSystem(),
+            new AttackStopSystem(),
             new AnimationSystem(),
 
             new GravitySystem(),

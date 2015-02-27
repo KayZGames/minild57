@@ -150,6 +150,7 @@ class EquipmentRenderingSystem extends WebGlSpriteRenderingSystem {
   Position getPosition(Entity entity) {
     var player = tm.getEntity(playerTag);
     rm[entity].facesRight = rm[player].facesRight;
+    rm[entity].state = rm[player].state;
     return pm[player];
   }
 }

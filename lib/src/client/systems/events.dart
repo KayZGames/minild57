@@ -8,6 +8,7 @@ class InputHandlingSystem extends GenericInputHandlingSystem {
   Mapper<Position> pm;
   Mapper<DelayedJump> djm;
   Mapper<Controller> cm;
+  Mapper<Renderable> rm;
 
   InputHandlingSystem() : super(Aspect.getAspectForAllOf([Controller, Position, Velocity]));
 
@@ -36,6 +37,7 @@ class InputHandlingSystem extends GenericInputHandlingSystem {
       c.attackCooldown -= world.delta;
     } else if (attack) {
       c.attackCooldown = Controller.maxAttackCooldown;
+      rm[entity].state = 'a';
     }
   }
 

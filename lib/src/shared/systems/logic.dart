@@ -247,4 +247,17 @@ class DeadMonsterAttackSystem extends EntityProcessingSystem {
   bool checkProcessing() => Controller.maxAttackCooldown - cm[tm.getEntity(playerTag)].attackCooldown < 0.1;
 }
 
+class AttackStopSystem extends EntityProcessingSystem {
+  Mapper<Controller> cm;
+  Mapper<Renderable> rm;
+  AttackStopSystem() : super(Aspect.getAspectForAllOf([Controller, Renderable]));
 
+  @override
+  void processEntity(Entity entity) {
+    var c = cm[entity];
+    var r = rm[entity];
+    if (c.attackCooldown < 0.0 && r.state == 'a') {
+      r.state = '';
+    }
+  }
+}
