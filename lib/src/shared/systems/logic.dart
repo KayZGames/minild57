@@ -207,6 +207,25 @@ class RealityDistortionSystem extends VoidEntitySystem {
   }
 }
 
+class DeadMonsterRealityDistortionSystem extends EntityProcessingSystem {
+  TagManager tm;
+  Mapper<Position> pm;
+  DeadMonsterRealityDistortionSystem() : super(Aspect.getAspectForAllOf([DeadMonster, Position]));
+
+  @override
+  void processEntity(Entity entity) {
+    var future = tm.getEntity(futureTag);
+
+    var p = pm[entity];
+    var fp = pm[future];
+
+    if (fp.x < p.x - 150.0) {
+      gameState.realityDistortion += 1.0;
+      entity.deleteFromWorld();
+    }
+  }
+}
+
 class DeadMonsterAttackSystem extends EntityProcessingSystem {
   TagManager tm;
   Mapper<Position> pm;

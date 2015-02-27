@@ -78,6 +78,7 @@ class Game extends GameBase {
             new LifetimeSystem(),
             new DelayedJumpSystem(),
             new RealityDistortionSystem(),
+            new DeadMonsterRealityDistortionSystem(),
             new DeadMonsterAttackSystem(),
 
             new AnalyticsSystem(AnalyticsSystem.GITHUB, 'minild57')
