@@ -74,6 +74,7 @@ class Game extends GameBase {
 
             new HudRenderingSystem(hudCtx),
             new EndingScreenRenderingSystem(hudCtx),
+            new BeginningScreenRenderingSystem(hudCtx),
 
             new LifetimeSystem(),
             new DelayedJumpSystem(),

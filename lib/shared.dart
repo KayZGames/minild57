@@ -17,4 +17,5 @@ GameState gameState = new GameState();
 class GameState {
   double realityDistortion = 0.0;
   bool playing = false;
+  bool beginning = false;
 }

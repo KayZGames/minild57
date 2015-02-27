@@ -338,3 +338,32 @@ class EndingScreenRenderingSystem extends VoidEntitySystem {
   @override
   bool checkProcessing() => time < 30;
 }
+
+class BeginningScreenRenderingSystem extends VoidEntitySystem {
+  CanvasRenderingContext2D ctx;
+  double time = 0.0;
+
+  BeginningScreenRenderingSystem(this.ctx);
+
+  @override
+  void processSystem() {
+    var ratio = time / 10;
+    var text = 'Press Start';
+    ctx
+        ..save()
+        ..globalAlpha = ratio * ratio * ratio * ratio
+        ..fillStyle = 'black'
+        ..clearRect(0, 0, 800, 600)
+        ..fillRect(0, 0, 800, 600)
+        ..fillStyle = 'white';
+    ctx.font = '50px Verdana';
+    var width = ctx.measureText(text).width;
+    ctx.fillText(text, 400 - width / 2, 275);
+    ctx.restore();
+
+    time += world.delta;
+  }
+
+  @override
+  bool checkProcessing() => gameState.beginning;
+}

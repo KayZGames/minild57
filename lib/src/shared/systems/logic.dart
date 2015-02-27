@@ -258,6 +258,11 @@ class DeadMonsterAttackSystem extends EntityProcessingSystem {
       }
       if (spawn != 0) {
         var monsterId = dmm[entity].id;
+        if (monsterId == 3) {
+          gameState.playing = false;
+          gameState.beginning = true;
+          r.state = '';
+        }
         world.createAndAddEntity(
             [
                 new Position(p.x, 0.0),
@@ -296,3 +301,4 @@ class AttackStopSystem extends EntityProcessingSystem {
     }
   }
 }
+
