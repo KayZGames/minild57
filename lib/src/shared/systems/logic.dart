@@ -116,7 +116,7 @@ class AiSystem extends EntityProcessingSystem {
     } else if (v.x == 0.0) {
       a.x = ai.acc;
     } else {
-      a.x = ai.acc * FastMath.signum(v.x);
+      a.x = ai.acc * (v.x > 0.0 ? 1 : -1);
     }
   }
 }

@@ -58,7 +58,6 @@ abstract class WebGlSpriteRenderingSystem extends WebGlRenderingSystem {
     var sprite = sheet.sprites[r.name];
     var dst = sprite.dst;
     var src = sprite.src;
-    var size = sprite.sourceSize;
     double right;
     double left;
     int dstLeft;
@@ -214,7 +213,7 @@ class FutureRenderingSystem extends VoidFullScreenRenderingSystem {
     gl.uniform2fv(
         gl.getUniformLocation(program, 'uPlayer'),
         new Float32List.fromList([(playerPos.x - playerVel.x / 8) / 400.0, playerPos.y / 300.0]));
-    gl.uniform1f(gl.getUniformLocation(program, 'uTime'), world.time);
+    gl.uniform1f(gl.getUniformLocation(program, 'uTime'), time);
   }
 
   @override
@@ -236,7 +235,7 @@ class BackgroundLayer0RenderingSystem extends VoidFullScreenRenderingSystem {
     gl.uniform2fv(
         gl.getUniformLocation(program, 'uPlayerPos'),
         new Float32List.fromList([(playerPos.x - playerVel.x / 8) / 400.0, playerPos.y / 300.0]));
-    gl.uniform1f(gl.getUniformLocation(program, 'uTime'), world.time);
+    gl.uniform1f(gl.getUniformLocation(program, 'uTime'), time);
   }
 
   @override
