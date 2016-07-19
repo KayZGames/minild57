@@ -13,8 +13,8 @@ Matrix4 createViewMatrix(TagManager tm, Mapper<Position> pm, Mapper<Velocity> vm
       p.x + 400 + offsetX - nextDouble * gameState.realityDistortion,
       p.y - 128.0 + nextDouble * gameState.realityDistortion,
       p.y + 472.0 - nextDouble * gameState.realityDistortion,
-      1,
-      -1);
+      1.0,
+      -1.0);
   return viewMatrix;
 }
 
@@ -46,7 +46,7 @@ abstract class WebGlSpriteRenderingSystem extends WebGlRenderingSystem {
         ..bindTexture(TEXTURE_2D, texture)
         ..texParameteri(TEXTURE_2D, TEXTURE_MIN_FILTER, LINEAR)
         ..texParameteri(TEXTURE_2D, TEXTURE_WRAP_S, CLAMP_TO_EDGE)
-        ..texImage2DImage(TEXTURE_2D, 0, RGBA, RGBA, UNSIGNED_BYTE, sheet.image)
+        ..texImage2D(TEXTURE_2D, 0, RGBA, RGBA, UNSIGNED_BYTE, sheet.image)
         ..uniform1i(uTexture, 0)
         ..uniform2f(gl.getUniformLocation(program, 'uSize'), sheet.image.width, sheet.image.height);
   }

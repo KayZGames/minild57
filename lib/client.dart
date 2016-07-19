@@ -1,7 +1,7 @@
 library client;
 
-import 'dart:html' hide Player, Timeline;
-export 'dart:html' hide Player, Timeline;
+import 'dart:html';
+export 'dart:html';
 import 'dart:web_gl';
 import 'dart:typed_data';
 
@@ -19,7 +19,7 @@ class Game extends GameBase {
   CanvasRenderingContext2D hudCtx;
 
   Game()
-      : super('minild57', '#webgl', 800, 600, webgl: true, bodyDefsName: null) {
+      : super('minild57', '#webgl', 800, 600, webgl: true, bodyDefsName: null, depthTest: false) {
     hudCanvas = querySelector('#context2d');
     hudCtx = hudCanvas.context2D;
     hudCtx
@@ -70,7 +70,7 @@ class Game extends GameBase {
     tm.register(future, futureTag);
   }
 
-  Map<int, EntitySystem> getSystems() {
+  Map<int, List<EntitySystem>> getSystems() {
     return {
       GameBase.rendering: [
         new SoundSystem(helper.audioHelper),
