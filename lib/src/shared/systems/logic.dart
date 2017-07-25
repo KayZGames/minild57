@@ -1,11 +1,10 @@
 part of shared;
 
-
 class AccelerationSystem extends EntityProcessingSystem {
   Mapper<Acceleration> am;
   Mapper<Velocity> vm;
 
-  AccelerationSystem() : super(Aspect.getAspectForAllOf([Acceleration, Velocity]));
+  AccelerationSystem() : super(new Aspect.forAllOf([Acceleration, Velocity]));
 
   @override
   void processEntity(Entity entity) {
@@ -25,7 +24,7 @@ class MovementSystem extends EntityProcessingSystem {
   Mapper<Position> pm;
   Mapper<Renderable> rm;
 
-  MovementSystem() : super(Aspect.getAspectForAllOf([Position, Velocity]));
+  MovementSystem() : super(new Aspect.forAllOf([Position, Velocity]));
 
   @override
   void processEntity(Entity entity) {
@@ -53,7 +52,7 @@ class MovementSystem extends EntityProcessingSystem {
 class GravitySystem extends EntityProcessingSystem {
   Mapper<Acceleration> am;
 
-  GravitySystem() : super(Aspect.getAspectForAllOf([Acceleration]));
+  GravitySystem() : super(new Aspect.forAllOf([Acceleration]));
 
   @override
   void processEntity(Entity entity) {
@@ -65,7 +64,7 @@ class DirectionSystem extends EntityProcessingSystem {
   Mapper<Acceleration> am;
   Mapper<Renderable> rm;
 
-  DirectionSystem() : super(Aspect.getAspectForAllOf([Acceleration, Renderable]));
+  DirectionSystem() : super(new Aspect.forAllOf([Acceleration, Renderable]));
 
   @override
   void processEntity(Entity entity) {
@@ -80,18 +79,6 @@ class DirectionSystem extends EntityProcessingSystem {
   }
 }
 
-class AnimationSystem extends EntityProcessingSystem {
-  Mapper<Renderable> rm;
-
-  AnimationSystem() : super(Aspect.getAspectForAllOf([Renderable]));
-
-  @override
-  void processEntity(Entity entity) {
-    var r = rm[entity];
-
-    r.time += world.delta;
-  }
-}
 
 class AiSystem extends EntityProcessingSystem {
   Mapper<Acceleration> am;
@@ -99,8 +86,8 @@ class AiSystem extends EntityProcessingSystem {
   Mapper<Position> pm;
   Mapper<Ai> aim;
 
-  AiSystem() : super(Aspect.getAspectForAllOf([Ai, Acceleration, Velocity, Position]));
-
+  AiSystem()
+      : super(new Aspect.forAllOf([Ai, Acceleration, Velocity, Position]));
 
   @override
   void processEntity(Entity entity) {
@@ -128,18 +115,20 @@ class DustSpawningSystem extends EntitySystem {
   bool spawn = false;
   double offsetX = 0.0;
 
-  DustSpawningSystem() : super(Aspect.getEmpty());
+  DustSpawningSystem() : super(new Aspect.empty());
 
   @override
   void processEntities(Iterable<Entity> entities) {
     var player = tm.getEntity(playerTag);
     var p = pm[player];
     for (int i = 0; i < 5; i++) {
-      world.createAndAddEntity(
-          [
-              new Renderable('dust_${random.nextInt(2)}', 4, 0.05, random.nextBool()),
-              new Position(-32 + p.x + random.nextInt(64) + offsetX, p.y + 5 - random.nextInt(10)),
-              new Lifetime(0.2)]);
+      world.createAndAddEntity([
+        new Renderable('dust_${random.nextInt(2)}',
+            maxFrames: 4, timePerFrame: 0.05, facesRight: random.nextBool()),
+        new Position(-32 + p.x + random.nextInt(64) + offsetX,
+            p.y + 5 - random.nextInt(10)),
+        new Lifetime(0.2)
+      ]);
     }
     spawn = false;
   }
@@ -148,10 +137,9 @@ class DustSpawningSystem extends EntitySystem {
   bool checkProcessing() => spawn;
 }
 
-
 class LifetimeSystem extends EntityProcessingSystem {
   Mapper<Lifetime> lm;
-  LifetimeSystem() : super(Aspect.getAspectForAllOf([Lifetime]));
+  LifetimeSystem() : super(new Aspect.forAllOf([Lifetime]));
 
   @override
   void processEntity(Entity entity) {
@@ -168,7 +156,8 @@ class DelayedJumpSystem extends EntityProcessingSystem {
   Mapper<DelayedJump> djm;
   Mapper<Renderable> rm;
 
-  DelayedJumpSystem() : super(Aspect.getAspectForAllOf([DelayedJump, Velocity, Renderable]));
+  DelayedJumpSystem()
+      : super(new Aspect.forAllOf([DelayedJump, Velocity, Renderable]));
 
   @override
   void processEntity(Entity entity) {
@@ -181,8 +170,8 @@ class DelayedJumpSystem extends EntityProcessingSystem {
       r.state = 'j';
       v.y = 6.0 * PIXEL_PER_METER;
       entity
-          ..removeComponent(DelayedJump)
-          ..changedInWorld();
+        ..removeComponent(DelayedJump)
+        ..changedInWorld();
       world.createAndAddEntity([new Sound('jump_landing')]);
     }
   }
@@ -210,7 +199,8 @@ class RealityDistortionSystem extends VoidEntitySystem {
 class DeadMonsterRealityDistortionSystem extends EntityProcessingSystem {
   TagManager tm;
   Mapper<Position> pm;
-  DeadMonsterRealityDistortionSystem() : super(Aspect.getAspectForAllOf([DeadMonster, Position]));
+  DeadMonsterRealityDistortionSystem()
+      : super(new Aspect.forAllOf([DeadMonster, Position]));
 
   @override
   void processEntity(Entity entity) {
@@ -232,14 +222,10 @@ class DeadMonsterAttackSystem extends EntityProcessingSystem {
   Mapper<Controller> cm;
   Mapper<Renderable> rm;
   Mapper<DeadMonster> dmm;
-  var framesPerMonster = <int, int>{
-    0: 4,
-    1: 4,
-    2: 6,
-    3: 1
-  };
+  var framesPerMonster = <int, int>{0: 4, 1: 4, 2: 6, 3: 1};
 
-  DeadMonsterAttackSystem() : super(Aspect.getAspectForAllOf([Position, DeadMonster]));
+  DeadMonsterAttackSystem()
+      : super(new Aspect.forAllOf([Position, DeadMonster]));
 
   @override
   void processEntity(Entity entity) {
@@ -263,20 +249,29 @@ class DeadMonsterAttackSystem extends EntityProcessingSystem {
           gameState.beginning = true;
           r.state = '';
         }
-        world.createAndAddEntity(
-            [
-                new Position(p.x, 0.0),
-                new Acceleration(),
-                new Velocity(spawn.toDouble()),
-                new Renderable('monster_${monsterId}', framesPerMonster[monsterId], 0.8 / framesPerMonster[monsterId]),
-                new Ai(p.x - 150 - random.nextInt(250), p.x + 150.0 + random.nextInt(250), dmm[entity].acc * PIXEL_PER_METER)]);
+        world.createAndAddEntity([
+          new Position(p.x, 0.0),
+          new Acceleration(),
+          new Velocity(spawn.toDouble()),
+          new Renderable('monster_${monsterId}',
+              maxFrames: framesPerMonster[monsterId],
+              timePerFrame: 0.8 / framesPerMonster[monsterId]),
+          new Ai(
+              p.x - 150 - random.nextInt(250),
+              p.x + 150.0 + random.nextInt(250),
+              dmm[entity].acc * PIXEL_PER_METER)
+        ]);
 
         for (int i = 0; i < 20; i++) {
-          world.createAndAddEntity(
-              [
-                  new Renderable('dust_${random.nextInt(2)}', 4, 0.05, random.nextBool()),
-                  new Position(-32 + p.x + random.nextInt(64), p.y + random.nextInt(64)),
-                  new Lifetime(0.2)]);
+          world.createAndAddEntity([
+            new Renderable('dust_${random.nextInt(2)}',
+                maxFrames: 4,
+                timePerFrame: 0.05,
+                facesRight: random.nextBool()),
+            new Position(
+                -32 + p.x + random.nextInt(64), p.y + random.nextInt(64)),
+            new Lifetime(0.2)
+          ]);
         }
         entity.deleteFromWorld();
       }
@@ -284,13 +279,16 @@ class DeadMonsterAttackSystem extends EntityProcessingSystem {
   }
 
   @override
-  bool checkProcessing() => Controller.maxAttackCooldown - cm[tm.getEntity(playerTag)].attackCooldown < 0.1;
+  bool checkProcessing() =>
+      Controller.maxAttackCooldown -
+          cm[tm.getEntity(playerTag)].attackCooldown <
+      0.1;
 }
 
 class AttackStopSystem extends EntityProcessingSystem {
   Mapper<Controller> cm;
   Mapper<Renderable> rm;
-  AttackStopSystem() : super(Aspect.getAspectForAllOf([Controller, Renderable]));
+  AttackStopSystem() : super(new Aspect.forAllOf([Controller, Renderable]));
 
   @override
   void processEntity(Entity entity) {
@@ -301,4 +299,3 @@ class AttackStopSystem extends EntityProcessingSystem {
     }
   }
 }
-

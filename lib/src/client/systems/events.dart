@@ -1,6 +1,5 @@
 part of client;
 
-
 class InputHandlingSystem extends GenericInputHandlingSystem {
   DustSpawningSystem dss;
   Mapper<Acceleration> am;
@@ -10,8 +9,8 @@ class InputHandlingSystem extends GenericInputHandlingSystem {
   Mapper<Controller> cm;
   Mapper<Renderable> rm;
 
-  InputHandlingSystem() : super(Aspect.getAspectForAllOf([Controller, Position, Velocity]));
-
+  InputHandlingSystem()
+      : super(new Aspect.forAllOf([Controller, Position, Velocity]));
 
   @override
   void processEntity(Entity entity) {
@@ -21,8 +20,9 @@ class InputHandlingSystem extends GenericInputHandlingSystem {
     var c = cm[entity];
     if (p.y <= 10.0 && v.y == 0.0) {
       if (jump && !djm.has(entity)) {
-        entity..addComponent(new DelayedJump(0.15))
-              ..changedInWorld();
+        entity
+          ..addComponent(new DelayedJump(0.15))
+          ..changedInWorld();
         dss.spawn = true;
         dss.offsetX = v.x * 8 * world.delta;
       }
@@ -41,8 +41,10 @@ class InputHandlingSystem extends GenericInputHandlingSystem {
     }
   }
 
-  bool get left => keyState[KeyCode.A] == true || keyState[KeyCode.LEFT] == true;
-  bool get right => keyState[KeyCode.D] == true || keyState[KeyCode.RIGHT] == true;
+  bool get left =>
+      keyState[KeyCode.A] == true || keyState[KeyCode.LEFT] == true;
+  bool get right =>
+      keyState[KeyCode.D] == true || keyState[KeyCode.RIGHT] == true;
   bool get attack => keyState[KeyCode.J] == true || keyState[KeyCode.X] == true;
   bool get jump => keyState[KeyCode.K] == true || keyState[KeyCode.C] == true;
 

@@ -19,7 +19,8 @@ class Game extends GameBase {
   CanvasRenderingContext2D hudCtx;
 
   Game()
-      : super('minild57', '#webgl', 800, 600, webgl: true, bodyDefsName: null, depthTest: false) {
+      : super('minild57', '#webgl', 800, 600,
+            webgl: true, bodyDefsName: null, depthTest: false) {
     hudCanvas = querySelector('#context2d');
     hudCtx = hudCanvas.context2D;
     hudCtx
@@ -42,14 +43,14 @@ class Game extends GameBase {
     for (int i = -1024; i < 20000; i += 64) {
       addEntity([
         new Position(i.toDouble(), -64.0),
-        new Renderable('ground', 1, 1.0, random.nextBool())
+        new Renderable('ground', facesRight: random.nextBool())
       ]);
     }
     for (int x = -1024; x < -100; x += 64) {
       for (int y = 0; y < 300; y += 60) {
         addEntity([
           new Position(x.toDouble(), y.toDouble()),
-          new Renderable('ground', 1, 1.0, random.nextBool())
+          new Renderable('ground', facesRight:  random.nextBool())
         ]);
       }
     }
@@ -70,43 +71,46 @@ class Game extends GameBase {
     tm.register(future, futureTag);
   }
 
-  Map<int, List<EntitySystem>> getSystems() {
-    return {
-      GameBase.rendering: [
-        new SoundSystem(helper.audioHelper),
-        new GravitySystem(),
-        new AccelerationSystem(),
-        new MovementSystem(),
-        new WebGlCanvasCleaningSystem(ctx),
-        new BackgroundRenderingSystem(ctx),
-        new BackgroundLayer0RenderingSystem(ctx),
-        new SpriteRenderingSystem(ctx, spriteSheet),
-        new FutureRenderingSystem(ctx),
-        new PlayerRenderingSystem(ctx, spriteSheet),
-        new EquipmentRenderingSystem(ctx, spriteSheet),
-        new HudRenderingSystem(hudCtx),
-        new EndingScreenRenderingSystem(hudCtx),
-        new BeginningScreenRenderingSystem(hudCtx),
-      ],
-    GameBase.physics: [
-      new TweeningSystem(),
-      new InputHandlingSystem(),
-      new DustSpawningSystem(),
-      new AiSystem(),
-      new DirectionSystem(),
-      new AttackStopSystem(),
-      new AnimationSystem(),
-      new LifetimeSystem(),
-      new DelayedJumpSystem(),
-      new RealityDistortionSystem(),
-      new DeadMonsterRealityDistortionSystem(),
-      new DeadMonsterAttackSystem(),
-    ]
-    };
-  }
+  Map<int, List<EntitySystem>> getSystems() => {
+        GameBase.rendering: [
+//        new SoundSystem(helper.audioHelper),
+          new GravitySystem(),
+          new AccelerationSystem(),
+          new MovementSystem(),
+          new WebGlCanvasCleaningSystem(ctx),
+          new BackgroundRenderingSystem(ctx),
+          new BackgroundLayer0RenderingSystem(ctx),
+          new SpriteRenderingSystem(ctx, spriteSheet),
+          new FutureRenderingSystem(ctx),
+          new PlayerRenderingSystem(ctx, spriteSheet),
+          new EquipmentRenderingSystem(ctx, spriteSheet),
+          new HudRenderingSystem(hudCtx),
+          new EndingScreenRenderingSystem(hudCtx),
+          new BeginningScreenRenderingSystem(hudCtx),
+        ],
+        GameBase.physics: [
+          new TweeningSystem(),
+          new InputHandlingSystem(),
+          new DustSpawningSystem(),
+          new AiSystem(),
+          new DirectionSystem(),
+          new AttackStopSystem(),
+          new AnimationSystem(),
+          new LifetimeSystem(),
+          new DelayedJumpSystem(),
+          new RealityDistortionSystem(),
+          new DeadMonsterRealityDistortionSystem(),
+          new DeadMonsterAttackSystem(),
+        ]
+      };
 
   onInit() {
-    world.addManager(new TagManager());
-    return helper.audioHelper.loadAudioClips(['jump', 'jump_landing']);
+    world
+      ..addManager(new TagManager())
+      ..addManager(new WebGlViewProjectionMatrixManager())
+      ..addManager(new CameraManager()
+        ..width = 800
+        ..height = 600);
+//    return helper.audioHelper.loadAudioClips(['jump', 'jump_landing']);
   }
 }

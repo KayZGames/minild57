@@ -9,7 +9,6 @@ part 'src/shared/systems/logic.dart';
 
 const int PIXEL_PER_METER = 64;
 
-const String playerTag = 'player';
 const String futureTag = 'future';
 
 GameState gameState = new GameState();
